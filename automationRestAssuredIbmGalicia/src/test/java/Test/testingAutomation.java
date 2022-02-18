@@ -16,8 +16,9 @@ import java.io.File;
 import io.restassured.module.jsv.JsonSchemaValidator;
 
 public class testingAutomation {
-    
+
     @Test
+
     public void test1() {
         baseURI= "https://reqres.in/api";
         String body = given()
