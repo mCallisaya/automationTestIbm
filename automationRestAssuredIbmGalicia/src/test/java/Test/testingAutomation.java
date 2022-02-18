@@ -49,6 +49,7 @@ public class testingAutomation {
                 .extract().body().asString();
                 System.out.println(body);
         //comentario
+        //comentario2
     }
 
 
