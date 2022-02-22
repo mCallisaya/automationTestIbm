@@ -9,6 +9,7 @@ import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import util.Url;
 
 public class testPruebaEze {
     
@@ -19,7 +20,7 @@ public class testPruebaEze {
     public void testGET() {
 
         requestSpecification = new RequestSpecBuilder().
-                setBaseUri("https://reqres.in/api").
+                setBaseUri(Url.URL_API).
                 setContentType(ContentType.JSON).
                 build();
 
