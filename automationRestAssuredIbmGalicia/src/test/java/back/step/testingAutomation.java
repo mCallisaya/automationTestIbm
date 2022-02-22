@@ -1,7 +1,13 @@
-package Test;
+package back.step;
 
 import org.json.simple.JSONObject;
 import io.restassured.response.Response;
+import io.restassured.response.ValidatableResponse;
+import io.restassured.response.ValidatableResponseOptions;
+
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+
+
 import org.testng.annotations.Test;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,13 +44,15 @@ public class testingAutomation {
         JSONObject requestBody = new JSONObject();
         requestBody.put("name","morpheus");
         requestBody.put("jod","leader");
+
         String body = given()
                 .body(requestBody.toString())
                 .log().all()
                 .when()
                 .post("/users")
                 .then()
-                .assertThat().body(JsonSchemaValidator.matchesJsonSchema(new File("C:\\Users\\efrain\\IdeaProjects\\automationRestAssuredIbmGalicia\\src\\test\\schemaTest.json")))
+                .assertThat()
+                .body(matchesJsonSchemaInClasspath("schemas/schemaTest.json"))
                 .statusCode(201)
                 .extract().body().asString();
                 System.out.println(body);
