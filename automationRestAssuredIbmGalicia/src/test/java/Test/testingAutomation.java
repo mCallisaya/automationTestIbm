@@ -1,56 +1,69 @@
 package Test;
-
+import Util.Json;
+import Util.Url;
+import io.restassured.builder.RequestSpecBuilder;
 import org.json.simple.JSONObject;
 import io.restassured.response.Response;
+import org.json.simple.parser.JSONParser;
 import org.testng.annotations.Test;
-import java.util.HashMap;
-import java.util.Map;
-
 import static io.restassured.RestAssured.baseURI;
 import static org.hamcrest.Matchers.equalTo;
-import org.testng.annotations.Test;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalToObject;
+import static org.junit.Assert.assertEquals;
 import java.io.File;
-
+import java.io.FileReader;
+import io.restassured.specification.RequestSpecification;
 import io.restassured.module.jsv.JsonSchemaValidator;
+import static org.junit.Assert.assertEquals;
+import static io.restassured.RestAssured.given;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.http.ContentType;
+import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
+import static org.junit.Assert.assertEquals;
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+import static org.hamcrest.Matchers.equalTo;
 
 public class testingAutomation {
+    RequestSpecification requestSpecification;
+    Response response;
     @Test
-    public void test1() {
-        baseURI= "https://reqres.in/api";
-        String body = given()
-                .when()
-                .get("/users")
-                .then()
-                .body("data[3].first_name",equalTo("Eve"))
-                .statusCode(200)
-                .extract().body().asString();
-        System.out.println(body);
+    public void test1(){
+    requestSpecification = new RequestSpecBuilder().
+            setBaseUri(Url.API_PUBLIC_TEST).
+            setContentType(ContentType.JSON).
+            build();
 
+        response =
+                given().
+                        spec(requestSpecification).
+                        when().
+                        get("/users").
+                        then().
+                        extract().response();
+
+        assertEquals("El Status Code es incorrecto: " + response.getStatusCode(), 200, response.statusCode());
+        
     }
+
     @Test
     public void test2POst (){
-        baseURI= "https://reqres.in/api";
-        //  Map<String, Object>  map = new HashMap<String,Object>();
-        // map.put("name","morpheus");
-        //    map.put("jod","leader");
-        JSONObject requestBody = new JSONObject();
-        requestBody.put("name","morpheus");
-        requestBody.put("jod","leader");
-        String body = given()
-                .body(requestBody.toString())
-                .log().all()
+        requestSpecification = new RequestSpecBuilder().
+                setBaseUri(Url.API_PUBLIC_TEST).
+                setContentType(ContentType.JSON).
+                build();
+
+        Json json = new Json();
+        JSONObject jsonObject = json.jsontest();
+
+         String requestbody  = given().relaxedHTTPSValidation()
+                .body(jsonObject.toString())
                 .when()
                 .post("/users")
                 .then()
-                .assertThat().body(JsonSchemaValidator.matchesJsonSchema(new File("C:\\Users\\efrain\\IdeaProjects\\automationRestAssuredIbmGalicia\\src\\test\\schemaTest.json")))
-                .statusCode(201)
-                .extract().body().asString();
-                System.out.println(body);
-        //comentario
-        //comentario2
-    }
-
+                .body(matchesJsonSchemaInClasspath(" schemas/schemaTest.json")).toString();
+         System.out.println(requestbody);
+        }
 
 }
