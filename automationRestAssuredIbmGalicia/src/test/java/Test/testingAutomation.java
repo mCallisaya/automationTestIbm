@@ -44,7 +44,7 @@ public class testingAutomation {
                 .when()
                 .post("/users")
                 .then()
-                .assertThat().body(JsonSchemaValidator.matchesJsonSchema(new File("C:\\Users\\efrain\\IdeaProjects\\automationRestAssuredIbmGalicia\\src\\test\\schemaTest.json")))
+                .assertThat().body(JsonSchemaValidator.matchesJsonSchema(new File("")))
                 .statusCode(201)
                 .extract().body().asString();
                 System.out.println(body);
